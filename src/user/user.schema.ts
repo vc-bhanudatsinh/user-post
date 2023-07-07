@@ -36,6 +36,7 @@ export class User {
 
   @Prop({
     required: true,
+    unique: true,
     default: function () {
       const randomNumber: number = Math.round(
         Math.random() * 1000 +
