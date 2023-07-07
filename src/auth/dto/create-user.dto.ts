@@ -5,6 +5,8 @@ import {
   IsOptional,
   MaxLength,
   MinLength,
+  Min,
+  Max,
 } from 'class-validator';
 
 export class CreateUserDto {
@@ -26,8 +28,8 @@ export class CreateUserDto {
   password: string;
 
   @IsNumber()
-  @MaxLength(10 ** 10, { message: 'Phone Number should be of 10 digit' })
-  @MinLength(10 ** 10, { message: 'Phone Number should be of 10 digit' })
+  @Min(10 ** 9, { message: 'Phone No should be of length 10' })
+  @Max(10 ** 10 - 1, { message: 'Phone No should be of length 10' })
   @IsOptional()
   phoneNo: string;
 }

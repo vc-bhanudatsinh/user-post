@@ -1,8 +1,16 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Types } from 'mongoose';
 
 export type UserDocument = HydratedDocument<User>;
 
+export interface IUser {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNo?: number;
+  username: string;
+  id: Types.ObjectId;
+}
 @Schema()
 export class User {
   @Prop({ required: true })
@@ -11,7 +19,10 @@ export class User {
   @Prop({ required: true })
   lastName: string;
 
-  @Prop({ unique: true, required: true })
+  @Prop({
+    unique: [true, 'Email already exists'],
+    required: [true, 'Email is required'],
+  })
   email: string;
 
   @Prop({ required: true })
@@ -20,7 +31,7 @@ export class User {
   @Prop({ required: true })
   tokenPass: string;
 
-  @Prop()
+  @Prop({ unique: [true, 'Duplicate Phone No'] })
   phoneNo: string;
 
   @Prop({
