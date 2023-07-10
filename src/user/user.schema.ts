@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Types } from 'mongoose';
+import { HydratedDocument, Types, SchemaTypes } from 'mongoose';
 import * as bcrypt from 'bcryptjs';
 
 export type UserDocument = HydratedDocument<User>;
@@ -14,19 +14,27 @@ export interface IUser {
 }
 @Schema()
 export class User {
-  @Prop({ required: true })
+  @Prop({
+    type: SchemaTypes.String,
+    required: true,
+  })
   firstName: string;
 
-  @Prop({ required: true })
+  @Prop({
+    type: SchemaTypes.String,
+    required: true,
+  })
   lastName: string;
 
   @Prop({
+    type: SchemaTypes.String,
     unique: [true, 'Email already exists'],
     required: [true, 'Email is required'],
   })
   email: string;
 
   @Prop({
+    type: SchemaTypes.String,
     required: true,
     default: async function () {
       return await bcrypt.hash(this.password, 10);
@@ -34,13 +42,20 @@ export class User {
   })
   password: string;
 
-  @Prop({ required: true })
+  @Prop({
+    type: SchemaTypes.String,
+    required: true,
+  })
   tokenPass: string;
 
-  @Prop({ unique: [true, 'Duplicate Phone No'] })
+  @Prop({
+    type: SchemaTypes.String,
+    unique: [true, 'Duplicate Phone No'],
+  })
   phoneNo: string;
 
   @Prop({
+    type: SchemaTypes.String,
     required: true,
     unique: true,
     default: function () {
