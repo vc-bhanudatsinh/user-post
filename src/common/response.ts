@@ -6,7 +6,7 @@ export interface ICommonResponse {
   timeStamp: string;
 }
 
-export const sucess = (
+export const success = (
   status: number,
   message: string,
   data: [] | object = [],

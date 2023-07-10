@@ -14,7 +14,7 @@ export class AuthUtils {
     return await bcrypt.hash(password, 10);
   }
 
-  createJwtToken(id: IUser['id']) {
-    return jwt.sign({ id }, envConfig.accessTokenSecret);
+  createJwtToken(id: IUser['id'], tokenPass: string) {
+    return jwt.sign({ id, token: tokenPass }, envConfig.accessTokenSecret);
   }
 }

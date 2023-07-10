@@ -24,7 +24,7 @@ export class CreateUserDto {
   lastName: string;
 
   @IsString()
-  @MinLength(8, { message: 'Password length should be minimun 8' })
+  @MinLength(8, { message: 'Password length should be of minimun 8' })
   password: string;
 
   @IsNumber()
