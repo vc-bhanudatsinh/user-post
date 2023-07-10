@@ -31,8 +31,6 @@ export class AuthService {
     const duplicateUser = await this.userModel.findOne(body).lean();
     if (duplicateUser) throw new ConflictException('User Already Exists');
 
-    user.password = await this.authUtils.hashPassword(user.password);
-
     const createUser = new this.userModel({
       ...user,
       tokenPass: this.authUtils.generateTokenPass(),
