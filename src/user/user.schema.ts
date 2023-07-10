@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
+import * as bcrypt from 'bcryptjs';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -25,7 +26,12 @@ export class User {
   })
   email: string;
 
-  @Prop({ required: true })
+  @Prop({
+    required: true,
+    default: async function () {
+      return await bcrypt.hash(this.password, 10);
+    },
+  })
   password: string;
 
   @Prop({ required: true })
