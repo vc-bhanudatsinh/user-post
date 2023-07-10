@@ -8,7 +8,6 @@ import * as responseHandler from '../common/response';
 import { CreateUserDto } from '../auth/dto/create-user.dto';
 import { LoginUserDto } from '../auth/dto/login-user.dto';
 import { AuthUtils } from '../utils/auth.utils';
-import { envConfig } from 'src/configs/env.config';
 
 @Injectable()
 export class AuthService {

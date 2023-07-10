@@ -25,7 +25,6 @@ export class VerifyJwtGuard implements CanActivate {
       const decode = await this.jwtService.verifyAsync(token, {
         secret: envConfig.accessTokenSecret,
       });
-      console.log('decode', decode);
       if (!decode) throw new UnauthorizedException('Token malformed');
       const user = await this.userService.getUser(decode);
       if (!user) throw new NotFoundException('User not found');
