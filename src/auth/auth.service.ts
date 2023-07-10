@@ -3,16 +3,19 @@ import { Model } from 'mongoose';
 import { Injectable, ConflictException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../user/user.schema';
+import { JwtService } from '@nestjs/jwt';
 import * as responseHandler from '../common/response';
 import { CreateUserDto } from '../auth/dto/create-user.dto';
 import { LoginUserDto } from '../auth/dto/login-user.dto';
 import { AuthUtils } from '../utils/auth.utils';
+import { envConfig } from 'src/configs/env.config';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     private authUtils: AuthUtils,
+    private jwtService: JwtService,
   ) {}
 
   async create(user: CreateUserDto): Promise<responseHandler.ICommonResponse> {
@@ -37,10 +40,10 @@ export class AuthService {
     });
     await createUser.save();
 
-    const accessToken = await this.authUtils.createJwtToken(
-      createUser['_id'],
-      createUser.tokenPass,
-    );
+    const accessToken = await this.jwtService.signAsync({
+      id: createUser['_id'],
+      token: createUser.tokenPass,
+    });
     return responseHandler.success(
       httpStatus.CREATED,
       'User created Successfully',
@@ -58,10 +61,10 @@ export class AuthService {
         'Account does not exists',
       );
 
-    const accessToken = await this.authUtils.createJwtToken(
-      userData['_id'],
-      userData.tokenPass,
-    );
+    const accessToken = await this.jwtService.signAsync({
+      id: userData['_id'],
+      token: userData.tokenPass,
+    });
     return responseHandler.success(httpStatus.OK, 'Logged in Successfully', {
       accessToken,
     });
