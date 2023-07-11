@@ -4,6 +4,7 @@ import {
   Injectable,
   Body,
   Query,
+  Param,
   Get,
   NotFoundException,
   UseGuards,
@@ -15,6 +16,7 @@ import { User } from '../user/user.schema';
 import { RequestUser } from '../decorators/request.decorator';
 import { GetPostListDto } from './dtos/post-list.dto';
 import { CreatePostDto } from './dtos/create-post.dto';
+import { GetPostDetailsDto } from './dtos/post-details.dto';
 import * as httpStatus from 'http-status';
 import * as responseHandler from '../common/response';
 import { VerifyJwtGuard } from '../guard/verify-jwt.guard';
@@ -63,11 +65,40 @@ export class PostController {
       searchComment,
       searchUserId as Types.ObjectId,
     );
-
+    if (posts.length === 0) throw new NotFoundException('Posts does not exist');
     return responseHandler.success(
       httpStatus.OK,
       'Post Lists fetched Successfully',
       posts[0],
+    );
+  }
+
+  @Get('/details/:id/')
+  async getPostDetails(
+    @Param() param: { id: string },
+    @RequestUser() user: User,
+    @Query() query: GetPostDetailsDto,
+  ) {
+    const postId = new Types.ObjectId(param.id);
+    const { limit = '5', pageNo = '1' } = query;
+    const startIndex = (+pageNo - 1) * +limit;
+    const endIndex = limit;
+
+    const comments = await this.postService.getPostDetailsId(
+      postId,
+      +startIndex,
+      +limit,
+      +endIndex,
+      user['_id'],
+    );
+
+    if (comments.length === 0)
+      throw new NotFoundException("Post does not exist or it's private");
+
+    return responseHandler.success(
+      httpStatus.OK,
+      'comment fetched successfully',
+      comments[0],
     );
   }
 }

@@ -204,4 +204,49 @@ export class PostService {
     if (searchedComment) pipeline.splice(1, 0, ...searchQuery);
     return this.postModel.aggregate(pipeline);
   }
+
+  async getPostById(id) {
+    return this.postModel.findById(id).lean();
+  }
+
+  async getPostDetailsId(
+    postId: Types.ObjectId,
+    startIndex: number,
+    limit: number,
+    endIndex: number,
+    userId: Types.ObjectId,
+  ) {
+    const pipeline: PipelineStage[] = [
+      {
+        $match: {
+          _id: postId,
+          $or: [
+            {
+              postType: 'public',
+            },
+            {
+              postType: 'private',
+              $or: [{ shareOnly: userId }, { userId: userId }],
+            },
+          ],
+        },
+      },
+      {
+        $addFields: {
+          comments: {
+            $slice: [{ $reverseArray: '$comments' }, startIndex, endIndex],
+          },
+          totalComments: {
+            $size: '$comments',
+          },
+          totalPages: {
+            $ceil: {
+              $divide: [{ $size: '$comments' }, limit],
+            },
+          },
+        },
+      },
+    ];
+    return await this.postModel.aggregate(pipeline);
+  }
 }

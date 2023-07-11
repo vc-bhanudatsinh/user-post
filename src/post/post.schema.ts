@@ -4,11 +4,11 @@ import { User } from '../user/user.schema';
 
 export type PostDocument = HydratedDocument<Posts>;
 
-interface IComments {
+export interface IComments {
   userId: Types.ObjectId;
   comment: string;
-  mentions: [Types.ObjectId];
-  createdAt: Date;
+  mentions: Types.ObjectId[];
+  createdAt?: Date;
 }
 
 export interface IPosts {
@@ -55,12 +55,12 @@ export class Posts {
   postType: string;
 
   @Prop({
-    userId: SchemaTypes.ObjectId,
-    comment: SchemaTypes.String,
-    mentions: [SchemaTypes.ObjectId],
-    createdAt: {
-      type: SchemaTypes.Date,
-      default: new Date(),
+    _id: true,
+    type: {
+      userId: SchemaTypes.ObjectId,
+      comment: SchemaTypes.String,
+      mentions: [SchemaTypes.ObjectId],
+      createdAt: { type: SchemaTypes.Date, default: new Date() },
     },
   })
   comments: [IComments];
