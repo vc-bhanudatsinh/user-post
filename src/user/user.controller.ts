@@ -1,13 +1,22 @@
 import * as httpStatus from 'http-status';
 import * as responseHandler from '../common/response';
-import { Controller, Get, Injectable, Body, Patch } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Injectable,
+  Body,
+  Patch,
+  UseGuards,
+} from '@nestjs/common';
 import { User } from './user.schema';
 import { UserService } from './user.service';
 import { EditProfileDto } from './dtos/edit-profile.dto';
 import { RequestUser } from '../decorators/request.decorator';
+import { VerifyJwtGuard } from '../guard/verify-jwt.guard';
 
 @Injectable()
 @Controller('user')
+@UseGuards(VerifyJwtGuard)
 export class UserController {
   constructor(private userService: UserService) {}
 

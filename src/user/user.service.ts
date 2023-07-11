@@ -17,4 +17,18 @@ export class UserService {
   async editProfile(id: Types.ObjectId, userDetails: EditProfileDto) {
     return await this.userModel.updateOne({ _id: id }, userDetails);
   }
+
+  async validateUserIds(userIds: string[]) {
+    const data = userIds.map((id) => new Types.ObjectId(id));
+    return this.userModel
+      .find(
+        {
+          _id: {
+            $in: data,
+          },
+        },
+        { _id: 1 },
+      )
+      .lean();
+  }
 }

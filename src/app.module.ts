@@ -5,6 +5,11 @@ import { envConfig } from './configs/env.config';
 import { AuthModule } from './auth/auth.module';
 import { PostModule } from './post/post.module';
 @Module({
-  imports: [MongooseModule.forRoot(envConfig.dbUrl), UserModule, AuthModule, PostModule],
+  imports: [
+    MongooseModule.forRoot(envConfig.dbUrl),
+    UserModule,
+    AuthModule,
+    PostModule,
+  ],
 })
 export class AppModule {}
