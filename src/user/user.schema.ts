@@ -28,9 +28,6 @@ export class User {
 
   @Prop({
     required: true,
-    default: async function () {
-      return await bcrypt.hash(this.password, 10);
-    },
   })
   password: string;
 
@@ -55,3 +52,11 @@ export class User {
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
+UserSchema.pre('save', async function (next) {
+  try {
+    this.password = await bcrypt.hash(this.password, 10);
+  } catch (error) {
+    next(error);
+  }
+});
